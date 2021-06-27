@@ -25,11 +25,11 @@ func NewUser(db *sql.DB) *User {
 }
 
 // Create inserts a new ıser record
-func (t *User) Create(ctx context.Context, name string, lastname string, username string, country string) (internal.User, error) {
-	ctx, span := trace.SpanFromContext(ctx).Tracer().Start(ctx, "User.Create")
+func (u *User) Create(ctx context.Context, name string, lastname string, username string, country string) (internal.User, error) {
+	ctx, span := trace.SpanFromContext(ctx).TracerProvider().Tracer("UserTracer").Start(ctx, "User.Create")
 	span.SetAttributes(attribute.String("db.system", "postgresql"))
 	defer span.End()
-	id, err := t.q.InsertUser(ctx, InsertUserParams{
+	id, err := u.q.InsertUser(ctx, InsertUserParams{
 		Name:     name,
 		Lastname: lastname,
 		Username: username,
@@ -48,16 +48,16 @@ func (t *User) Create(ctx context.Context, name string, lastname string, usernam
 	}, nil
 }
 
-// Delete deletes the existing record matching the id.
-func (t *User) Delete(ctx context.Context, id string) error {
-	ctx, span := trace.SpanFromContext(ctx).Tracer().Start(ctx, "User.Delete")
+// Delete deletes the existing record matching the id
+func (u *User) Delete(ctx context.Context, id string) error {
+	ctx, span := trace.SpanFromContext(ctx).TracerProvider().Tracer("UserTracer").Start(ctx, "User.Delete")
 	span.SetAttributes(attribute.String("db.system", "postgresql"))
 	defer span.End()
 	val, err := uuid.Parse(id)
 	if err != nil {
 		return internal.WrapErrorf(err, internal.ErrorCodeInvalidArgument, "invalid uuid")
 	}
-	_, err = t.q.DeleteUser(ctx, val)
+	_, err = u.q.DeleteUser(ctx, val)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return internal.WrapErrorf(err, internal.ErrorCodeNotFound, "user not found")
@@ -68,16 +68,16 @@ func (t *User) Delete(ctx context.Context, id string) error {
 	return nil
 }
 
-// Find returns the requested User by searching its id.
-func (t *User) Find(ctx context.Context, id string) (internal.User, error) {
-	ctx, span := trace.SpanFromContext(ctx).Tracer().Start(ctx, "User.Find")
+// Find returns the requested User by searching its id
+func (u *User) Find(ctx context.Context, id string) (internal.User, error) {
+	ctx, span := trace.SpanFromContext(ctx).TracerProvider().Tracer("UserTracer").Start(ctx, "User.Find")
 	span.SetAttributes(attribute.String("db.system", "postgresql"))
 	defer span.End()
 	val, err := uuid.Parse(id)
 	if err != nil {
 		return internal.User{}, internal.WrapErrorf(err, internal.ErrorCodeInvalidArgument, "invalid uuid")
 	}
-	res, err := t.q.SelectUser(ctx, val)
+	res, err := u.q.SelectUser(ctx, val)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return internal.User{}, internal.WrapErrorf(err, internal.ErrorCodeNotFound, "user not found")
@@ -94,12 +94,12 @@ func (t *User) Find(ctx context.Context, id string) (internal.User, error) {
 	}, nil
 }
 
-// Find returns the requested User by searching its id.
-func (t *User) FindByCountry(ctx context.Context, country string) ([]internal.User, error) {
-	ctx, span := trace.SpanFromContext(ctx).Tracer().Start(ctx, "User.Find")
+// Find returns the requested User by searching its id
+func (u *User) FindByCountry(ctx context.Context, country string) ([]internal.User, error) {
+	ctx, span := trace.SpanFromContext(ctx).TracerProvider().Tracer("UserTracer").Start(ctx, "User.FindByCountry")
 	span.SetAttributes(attribute.String("db.system", "postgresql"))
 	defer span.End()
-	res, err := t.q.SelectUsersByCountry(ctx, country)
+	res, err := u.q.SelectUsersByCountry(ctx, country)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return []internal.User{}, internal.WrapErrorf(err, internal.ErrorCodeNotFound, "user not found")
@@ -121,16 +121,16 @@ func (t *User) FindByCountry(ctx context.Context, country string) ([]internal.Us
 	return users, nil
 }
 
-// Update updates the existing record with new values.
-func (t *User) Update(ctx context.Context, id string, name string, lastname string, username string, country string) error {
-	ctx, span := trace.SpanFromContext(ctx).Tracer().Start(ctx, "User.Update")
+// Update updates the existing record with new values
+func (u *User) Update(ctx context.Context, id string, name string, lastname string, username string, country string) error {
+	ctx, span := trace.SpanFromContext(ctx).TracerProvider().Tracer("UserTracer").Start(ctx, "User.Update")
 	span.SetAttributes(attribute.String("db.system", "postgresql"))
 	defer span.End()
 	val, err := uuid.Parse(id)
 	if err != nil {
 		return internal.WrapErrorf(err, internal.ErrorCodeInvalidArgument, "invalid uuid")
 	}
-	if _, err := t.q.UpdateUser(ctx, UpdateUserParams{
+	if _, err := u.q.UpdateUser(ctx, UpdateUserParams{
 		ID:       val,
 		Name:     name,
 		Lastname: lastname,

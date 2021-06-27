@@ -5,14 +5,14 @@ import (
 )
 
 // Error represents an error that could be wrapping another error, it includes a code for determining what
-// triggered the error.
+// triggered the error
 type Error struct {
 	orig error
 	msg  string
 	code ErrorCode
 }
 
-// ErrorCode defines supported error codes.
+// ErrorCode defines supported error codes
 type ErrorCode uint
 
 const (
@@ -21,7 +21,7 @@ const (
 	ErrorCodeInvalidArgument
 )
 
-// WrapErrorf returns a wrapped error.
+// WrapErrorf returns a wrapped error
 func WrapErrorf(orig error, code ErrorCode, format string, a ...interface{}) error {
 	return &Error{
 		code: code,
@@ -30,12 +30,12 @@ func WrapErrorf(orig error, code ErrorCode, format string, a ...interface{}) err
 	}
 }
 
-// NewErrorf instantiates a new error.
+// NewErrorf instantiates a new error
 func NewErrorf(code ErrorCode, format string, a ...interface{}) error {
 	return WrapErrorf(nil, code, format, a...)
 }
 
-// Error returns the message, when wrapping errors the wrapped error is returned.
+// Error returns the message, when wrapping errors the wrapped error is returned
 func (e *Error) Error() string {
 	if e.orig != nil {
 		return fmt.Sprintf("%s: %v", e.msg, e.orig)
@@ -44,12 +44,12 @@ func (e *Error) Error() string {
 	return e.msg
 }
 
-// Unwrap returns the wrapped error, if any.
+// Unwrap returns the wrapped error, if any
 func (e *Error) Unwrap() error {
 	return e.orig
 }
 
-// Code returns the code representing this error.
+// Code returns the code representing this error
 func (e *Error) Code() ErrorCode {
 	return e.code
 }

@@ -1,7 +1,7 @@
-// Package internal defines the types used to create Users and their corresponding attributes.
+// Package internal defines the types used to create Users and their corresponding attributes
 package internal
 
-// User is an activity that needs to be completed within a period of time.
+// User is an activity that needs to be completed within a period of time
 type User struct {
 	ID       string
 	Name     string

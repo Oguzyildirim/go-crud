@@ -252,15 +252,13 @@ func newDB(tb testing.TB) *sql.DB {
 	dsn := &url.URL{
 		Scheme: "postgres",
 		User:   url.UserPassword("username", "password"),
-		Path:   "todo",
+		Path:   "user",
 	}
 
 	q := dsn.Query()
 	q.Add("sslmode", "disable")
 
 	dsn.RawQuery = q.Encode()
-
-	//-
 
 	pool, err := dockertest.NewPool("")
 	if err != nil {
@@ -319,8 +317,6 @@ func newDB(tb testing.TB) *sql.DB {
 	}); err != nil {
 		tb.Fatalf("Couldn't ping DB: %s", err)
 	}
-
-	//-
 
 	instance, err := migratepostgres.WithInstance(db, &migratepostgres.Config{})
 	if err != nil {
