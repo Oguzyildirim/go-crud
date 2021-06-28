@@ -71,6 +71,10 @@ We may add CDC(debezium/maxwell)
 We may profile our application with pprof
 
 We may add CI/CD pipeline
+
+We may add tests for vault
+
+We may introduce cobra for migration or spinning app or db queries etc.
 ```
 
 
