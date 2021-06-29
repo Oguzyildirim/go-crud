@@ -55,7 +55,7 @@ func (u *User) Delete(ctx context.Context, id string) error {
 	return nil
 }
 
-// User gets an existing User from the datastore
+// Find gets an existing User from the datastore
 func (u *User) Find(ctx context.Context, id string) (internal.User, error) {
 	ctx, span := trace.SpanFromContext(ctx).TracerProvider().Tracer("UserTracer").Start(ctx, "User.Find")
 	defer span.End()
@@ -68,7 +68,7 @@ func (u *User) Find(ctx context.Context, id string) (internal.User, error) {
 	return user, nil
 }
 
-// User gets an existing User from the datastore
+// FindByCountry gets an existing User from the datastore
 func (u *User) FindByCountry(ctx context.Context, country string) ([]internal.User, error) {
 	ctx, span := trace.SpanFromContext(ctx).TracerProvider().Tracer("UserTracer").Start(ctx, "User.FindByCountry")
 	defer span.End()

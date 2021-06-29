@@ -57,6 +57,7 @@ You can use vault as a secure secrets management but you should add _SECURE  to 
 I am creating a basic CRUD microservice application for User entity.
 
 I don't want to over complicate database strategy so choose Postgresql database and also since it is a demo application to not over complicate things i didn't add change data capture system like debezium or maxwell to user table but it is good idea to implement.
+
 ```
 
 ## Possible improvements
@@ -75,6 +76,8 @@ We may add CI/CD pipeline
 We may add tests for vault
 
 We may introduce cobra for migration or spinning app or db queries etc.
+
+We may inrtroduce fasthttp for scalibility needs
 ```
 
 
